@@ -2,7 +2,7 @@
   "name": "work47",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "board.js",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch"
