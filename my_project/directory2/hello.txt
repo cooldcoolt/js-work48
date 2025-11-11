@@ -1,0 +1,4 @@
+ mkdir -p my_project/directory1/subdirectory1 &&
+ mkdir -p my_project/directory2 &&
+ touch my_project/directory2/hello.txt &&
+ mkdir -p my_project/directory3/subdirectory2
