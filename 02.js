@@ -205,3 +205,4 @@ startPolling();
     // });
     // saveProfileBtn.addEventListener('click', saveProfile);
     // emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') startApp(); });
+
