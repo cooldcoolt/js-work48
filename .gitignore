@@ -72,3 +72,4 @@ tsconfig.tsbuildinfo
 *.swp
 *.swo
 *.bak
+.DS_Store
