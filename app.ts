@@ -200,7 +200,6 @@ const controlUser = async (): Promise<void> => {
   inputName.addEventListener("input", validateInputs);
   inputLastName.addEventListener("input", validateInputs);
 
-  // Обработка отправки формы
   const handleSubmit = async (event: Event) => {
     event.preventDefault();
 
@@ -243,7 +242,6 @@ const controlUser = async (): Promise<void> => {
     inputLastName.value = "";
   });
 
-  // Закрытие по клику на overlay
   overlay.addEventListener("click", (event) => {
     if (event.target === overlay) {
       overlay.style.display = "none";
@@ -254,7 +252,7 @@ const controlUser = async (): Promise<void> => {
 };
 
 const buildInput = (): void => {
-  // Проверяем, не создан ли уже input
+
   if (mainsec.querySelector(".messagePost")) {
     return;
   }
@@ -295,7 +293,6 @@ const buildInput = (): void => {
       return;
     }
 
-    // Ограничение длины сообщения
     if (ms.length > 1000) {
       showNotification("Сообщение слишком длинное (максимум 1000 символов)", "error");
       return;
@@ -311,11 +308,9 @@ const buildInput = (): void => {
       body.append("message", ms);
       await postMessage12(BASE_URL + MAIL + "/posts", "POST", body);
 
-      // Очищаем форму после успешной отправки
       txt.value = "";
       txt.placeholder = originalPlaceholder;
-      
-      // Обновляем сообщения
+
       setTimeout(() => {
         buildMessage(BASE_URL + MAIL + "/posts").catch((error) => {
           console.error("Ошибка при обновлении сообщений:", error);
@@ -334,7 +329,6 @@ const buildInput = (): void => {
     }
   });
 
-  // Автоматическое изменение размера textarea
   txt.addEventListener("input", () => {
     txt.style.height = "auto";
     txt.style.height = `${Math.min(txt.scrollHeight, 150)}px`;
@@ -384,16 +378,16 @@ const buildMessage = async (url: string): Promise<void> => {
       mainsec.appendChild(messageBlock);
     }
 
-    // Сохраняем текущую позицию скролла
+
     const wasScrolledToBottom = 
       messageBlock.scrollHeight - messageBlock.scrollTop <= messageBlock.clientHeight + 50;
     const oldScrollHeight = messageBlock.scrollHeight;
 
-    // Создаем фрагмент для более эффективного добавления в DOM
+
     const fragment = document.createDocumentFragment();
     const existingMessages = new Set<string>();
 
-    // Сохраняем существующие сообщения
+
     messageBlock.querySelectorAll(".message").forEach((msg) => {
       const msgId = msg.getAttribute("data-message-id");
       if (msgId) {
@@ -401,12 +395,12 @@ const buildMessage = async (url: string): Promise<void> => {
       }
     });
 
-    // Определяем диапазон сообщений для отображения
+
     const startIndex = message.length > MESSAGE_LIMIT_THRESHOLD 
       ? message.length - MAX_MESSAGES_TO_SHOW 
       : 0;
 
-    // Добавляем только новые сообщения
+
     for (let i = message.length - 1; i >= startIndex; i--) {
       const msgId = message[i]._id;
       if (existingMessages.has(msgId)) {
@@ -437,13 +431,13 @@ const buildMessage = async (url: string): Promise<void> => {
 
       const usrName = document.createElement("span");
       usrName.classList.add("userName1");
-      const fullName = `${message[i].user?.firstName || ""} ${message[i].user?.lastName || ""}`.trim() || "Неизвестный пользователь";
+      const fullName = `${message[i].user?.firstName || ""} ${message[i].user?.lastName || ""}`
+          .trim() || "Неизвестный пользователь";
       usrName.textContent = fullName;
       messageContent.appendChild(usrName);
 
       const messageText = document.createElement("p");
       messageText.classList.add("messageText");
-      // Безопасное отображение текста (защита от XSS)
       messageText.textContent = message[i].message || "";
       messageContent.appendChild(messageText);
 
@@ -463,8 +457,7 @@ const buildMessage = async (url: string): Promise<void> => {
       }
       messageContent.appendChild(postDate);
       messageDiv.appendChild(messageContent);
-      
-      // Добавляем в начало для правильного порядка
+
       if (messageBlock.firstChild) {
         messageBlock.insertBefore(messageDiv, messageBlock.firstChild);
       } else {
@@ -476,7 +469,6 @@ const buildMessage = async (url: string): Promise<void> => {
       messageBlock.insertBefore(fragment, messageBlock.firstChild);
     }
 
-    // Ограничиваем количество сообщений в DOM
     const allMessages = messageBlock.querySelectorAll(".message");
     if (allMessages.length > MAX_MESSAGES_TO_SHOW * 2) {
       for (let i = allMessages.length - 1; i >= MAX_MESSAGES_TO_SHOW * 2; i--) {
@@ -484,7 +476,6 @@ const buildMessage = async (url: string): Promise<void> => {
       }
     }
 
-    // Восстанавливаем позицию скролла
     if (wasScrolledToBottom) {
       messageBlock.scrollTop = messageBlock.scrollHeight;
     } else {
@@ -492,13 +483,11 @@ const buildMessage = async (url: string): Promise<void> => {
       messageBlock.scrollTop = newScrollHeight - oldScrollHeight + messageBlock.scrollTop;
     }
 
-    // Обновляем дату последнего сообщения
     if (message.length > 0) {
       lastMessageDate = message[message.length - 1]?.datetime || lastMessageDate;
     }
   } catch (error) {
     console.error("Ошибка при загрузке сообщений:", error);
-    // Не показываем ошибку пользователю при каждом polling, только в консоль
   }
 };
 
@@ -511,11 +500,9 @@ const listenToMessages = async (): Promise<void> => {
       const url = `${BASE_URL}${MAIL}/posts?datetime=${encodeURIComponent(dateString)}`;
       await buildMessage(url);
     } else {
-      // Если нет последней даты, загружаем все сообщения
       await buildMessage(`${BASE_URL}${MAIL}/posts`);
     }
   } catch (error) {
-    // Тихо обрабатываем ошибки polling, чтобы не спамить пользователя
     console.error("Ошибка при проверке новых сообщений:", error);
   }
 };
@@ -594,7 +581,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await buildMessage(BASE_URL + MAIL + "/posts");
     buildInput();
 
-    // Запускаем polling для новых сообщений
     if (pollingIntervalId) {
       clearInterval(pollingIntervalId);
     }
@@ -602,21 +588,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       listenToMessages();
     }, POLLING_INTERVAL);
 
-    // Обработка видимости страницы для оптимизации
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
-        // Останавливаем polling когда страница не видна
         if (pollingIntervalId) {
           clearInterval(pollingIntervalId);
           pollingIntervalId = null;
         }
       } else {
-        // Возобновляем polling когда страница видна
         if (!pollingIntervalId) {
           pollingIntervalId = setInterval(() => {
             listenToMessages();
           }, POLLING_INTERVAL);
-          // Сразу проверяем новые сообщения при возврате
           listenToMessages();
         }
       }
@@ -689,7 +671,6 @@ const subscribe = async (): Promise<void> => {
   let button = form.querySelector(".inputButton") as HTMLButtonElement;
   let exitButton = form.querySelector(".exitButton") as HTMLButtonElement;
 
-  // Удаляем старые обработчики
   const newInputName = inputName.cloneNode(true) as HTMLInputElement;
   const newButton = button.cloneNode(true) as HTMLButtonElement;
   const newExitButton = exitButton.cloneNode(true) as HTMLButtonElement;
@@ -702,7 +683,6 @@ const subscribe = async (): Promise<void> => {
   button = newButton;
   exitButton = newExitButton;
 
-  // Устанавливаем правильный тип для email input
   inputName.type = "email";
   inputName.setAttribute("aria-label", "Email для подписки");
 
@@ -715,7 +695,6 @@ const subscribe = async (): Promise<void> => {
 
   inputName.addEventListener("input", validateInputs);
 
-  // Обработка отправки формы
   const handleSubmit = async (event: Event) => {
     event.preventDefault();
 
@@ -759,7 +738,6 @@ const subscribe = async (): Promise<void> => {
     inputName.value = "";
   });
 
-  // Закрытие по клику на overlay
   overlay.addEventListener("click", (event) => {
     if (event.target === overlay) {
       overlay.style.display = "none";
