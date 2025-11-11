@@ -1,0 +1,25 @@
+@media (hover: hover) and (pointer: fine) {
+  .inputButton:not(:disabled):hover {
+    background: #0056b3;
+  }
+  .inputButton:hover {
+    background: #0056b3;
+  }
+
+  .messagePostForm input:focus {
+    border-color: #0095ff;
+  }
+
+  .messagePostForm button:hover {
+    background-color: #007acc;
+  }
+
+  .mainsec:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease;
+  }
+
+  .login input[type="text"]:focus {
+    border-color: #007bff;
+  }
+}

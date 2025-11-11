@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attractor Chat</title>
+    <meta name="description" content="Чат приложение Attractor" />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/media.css" />
+  </head>
+
+  <body>
+    <div class="loader-cn">
+      <span class="loader"></span>
+    </div>
+
+    <div id="root">
+      <div class="overlay">
+        <form id="profileForm" class="login">
+          <h3>Редактировать профиль</h3>
+          <input 
+            type="text" 
+            class="inputName" 
+            required 
+            placeholder="Имя" 
+            autocomplete="given-name"
+            minlength="1"
+            maxlength="50"
+          />
+
+          <input
+            type="text"
+            class="inputLastName"
+            required
+            placeholder="Фамилия"
+            autocomplete="family-name"
+            minlength="1"
+            maxlength="50"
+          />
+          <div class="butongr">
+            <button type="submit" class="inputButton" disabled>
+              Сохранить
+            </button>
+            <button type="button" class="exitButton">Отменить</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="overlay2">
+        <form id="subscribeForm" class="login">
+          <h3>Подписаться</h3>
+          <input
+            type="email"
+            class="inputName"
+            required
+            placeholder="Укажи почту"
+            autocomplete="email"
+          />
+          <div class="butongr">
+            <button type="submit" class="inputButton" disabled>
+              Подписаться
+            </button>
+            <button type="button" class="exitButton">Отменить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript" src="dist/app.js"></script>
+</html>
